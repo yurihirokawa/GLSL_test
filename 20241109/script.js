@@ -110,27 +110,28 @@ class WebGLApp {
     this.color = [];
     this.pointSize = [];
 
-    // 頂点を格子状に並べ、座標に応じた色を付け、大きさは揃える
-    const COUNT = 30;
-    for (let i = 0; i < COUNT; ++i) {
-      const x = i / (COUNT - 1);
-      const signedX = x * 2.0 - 1.0;
-      for (let j = 0; j < COUNT; ++j) {
-        const y = j / (COUNT - 1);
-        const signedY = y * 2.0 - 1.0;
+    const POINT_COUNT = 100; // 円周上の点の数
+    const RADIUS = 0.75; // 円の半径
 
-        this.position.push(signedX, signedY, 0.0);
-        this.color.push(x, y, 0.3, 0.5);
-        this.pointSize.push(20.0);
-      }
+    for (let i = 0; i < POINT_COUNT; i++) {
+        // 円周上の座標を計算
+        const angle = (Math.PI * 2 * i) / POINT_COUNT; // 各点の角度
+        const x = Math.cos(angle) * RADIUS; // x 座標
+        const y = Math.sin(angle) * RADIUS; // y 座標
+
+        // 頂点データとして追加
+        this.position.push(x, y, 0.0); // 円周上の点の位置
+        this.color.push(y, 0.3, x, 0.5); // 点の色 (グラデーション)
+        this.pointSize.push(20); // 点の大きさ
     }
 
+    // VBO を作成
     this.vbo = [
-      WebGLUtility.createVbo(this.gl, this.position),
-      WebGLUtility.createVbo(this.gl, this.color),
-      WebGLUtility.createVbo(this.gl, this.pointSize),
+        WebGLUtility.createVbo(this.gl, this.position),
+        WebGLUtility.createVbo(this.gl, this.color),
+        WebGLUtility.createVbo(this.gl, this.pointSize),
     ];
-  }
+}
   /**
    * WebGL を利用して描画を行う。
    */
